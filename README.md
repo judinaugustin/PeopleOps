@@ -1,6 +1,6 @@
 # PeopleOps Copilot
 
-PeopleOps Copilot is a local-first portfolio prototype for finding answers in a small library of **fictional, approved HR policies**. It returns source passages, lets an employee prepare checklists and HR-request drafts, and provides an in-app queue for human review.
+PeopleOps Copilot is a local-first prototype for finding answers in a small library of **approved HR policies**. It returns source passages, lets an employee prepare checklists and HR-request drafts, and provides an in-app queue for human review.
 
 > **Synthetic data only. Do not enter real employee information or sensitive personal details.** This is not an HRIS, legal or benefits adviser, or employment decision system. It must not be used to screen candidates, score employees, decide eligibility, or take employment actions.
 
