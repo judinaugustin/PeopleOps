@@ -1,0 +1,39 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: peopleops
+          POSTGRES_USER: peopleops
+          POSTGRES_PASSWORD: peopleops
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U peopleops -d peopleops"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      DATABASE_URL: postgres://peopleops:peopleops@localhost:5432/peopleops
+      AUTH_SECRET: ci-only-secret-value-long-enough-to-pass-32-characters
+      NODE_ENV: development
+      SEED_DEMO_USERS: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:unit
+      - run: npm run db:migrate
+      - run: npm run db:seed
+      - run: npm run test:eval
+      - run: npm run build

@@ -1,0 +1,28 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: peopleops
+      POSTGRES_USER: peopleops
+      POSTGRES_PASSWORD: peopleops
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["peopleops-db:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U peopleops -d peopleops"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  app:
+    build: .
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://peopleops:peopleops@db:5432/peopleops
+      APP_BASE_URL: http://localhost:3000
+      COOKIE_SECURE: "false"
+      SEED_DEMO_USERS: ${SEED_DEMO_USERS:-true}
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on:
+      db: { condition: service_healthy }
+volumes:
+  peopleops-db:
